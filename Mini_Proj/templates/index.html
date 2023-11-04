@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <form action="/add_task" method="POST">
+        <input type="text" name="task_name" placeholder="Add a task" required>
+        <input type="text" name="task_description" placeholder="Add a description (optional)">
+        <button type="submit">Add</button>
+    </form>
+    <ul>
+        {% for task in tasks %}
+            <li class="task {% if task[2] %}completed{% endif %}" data-task-id="{{ task[0] }}">
+                <input type="checkbox" {% if task[2] %}checked{% endif %} />
+                <span class="task-name">{{ task[1] }}</span>
+                <span class="date-added">{{ task[3].strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                <p class="task-description">{{ task[4] if task[4] else "(no-description)" }}</p>
+                <a class="update-delete-link" href="/delete_task/{{ task[0] }}">Delete</a>
+                <a class="update-delete-link" href="/update_task/{{ task[0] }}">Update</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <script>
+        var checkboxes = document.querySelectorAll('.task input[type="checkbox"]');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                var task = this.closest('.task');
+                var taskName = task.querySelector('.task-name');
+                var dateAdded = task.querySelector('.date-added');
+                var taskDescription = task.querySelector('.task-description');
+    
+                taskName.classList.toggle('completed');
+                dateAdded.classList.toggle('completed');
+                taskDescription.classList.toggle('completed');
+            });
+        });
+    </script>
+</body>
+</html>
+
